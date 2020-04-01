@@ -11,7 +11,7 @@ class TodoListScreen : BaseScreen() {
     private var isRunning = true
 
     private val commands = arrayListOf(
-        Command("help", "shows help text", ::executeHelp),
+        Command("help", "shows the help text", ::executeHelp),
         Command("exit", "close the application", ::executeExit)
     ).associateBy { it.name }
 
@@ -40,7 +40,7 @@ class TodoListScreen : BaseScreen() {
     }
 
     private fun enterCommand() {
-        print("Enter command:\n> ")
+        print("\nEnter command:\n> ")
         val command = readLine()?.toLowerCase() ?: "";
         if (commands.containsKey(command))
             commands[command]?.function?.invoke()
@@ -49,7 +49,10 @@ class TodoListScreen : BaseScreen() {
     }
 
     private fun executeHelp() {
-        println("Help text")
+        println()
+        commands.values.forEach {
+            println("${it.name} - ${it.helpText}")
+        }
     }
 
     private fun executeExit() {
