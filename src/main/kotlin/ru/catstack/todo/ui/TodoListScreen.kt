@@ -7,6 +7,13 @@ import ru.catstack.todo.engine.BaseScreen
 class TodoListScreen : BaseScreen() {
     private val viewModel: TodoListViewModel by kodein.instance()
 
+    private var isRunning = true
+
+    private val commands = hashMapOf<String, () -> Unit>(
+        "help" to ::executeHelp,
+        "exit" to ::executeExit
+    )
+
     override fun onCreate() {
         println("Todo List:\n")
 
@@ -16,7 +23,7 @@ class TodoListScreen : BaseScreen() {
 
         println("\nType 'Help' to view commands")
 
-        while (true) {
+        while (isRunning) {
             enterCommand()
         }
     }
@@ -32,9 +39,19 @@ class TodoListScreen : BaseScreen() {
     }
 
     private fun enterCommand() {
-        while (true) {
-            print("Enter command:\n> ")
-            readLine()
-        }
+        print("Enter command:\n> ")
+        val command = readLine()?.toLowerCase() ?: "";
+        if (commands.containsKey(command))
+            commands[command]?.invoke()
+        else
+            println("This command is not exists!")
+    }
+
+    private fun executeHelp() {
+        println("Help text")
+    }
+
+    private fun executeExit() {
+        isRunning = false
     }
 }
