@@ -3,5 +3,5 @@ package ru.catstack.todo.data
 import ru.catstack.todo.model.Task
 
 interface TodoRepository {
-    fun loadTodoList(): List<Task>
+    fun loadTodoList(): ArrayList<Task>
 }

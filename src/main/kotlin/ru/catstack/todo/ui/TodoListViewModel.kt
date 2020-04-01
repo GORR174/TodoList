@@ -9,6 +9,7 @@ class TodoListViewModel(private val repository: TodoRepository) {
             get() = mutableTodoList
 
     fun loadTodoList() {
-        mutableTodoList = repository.loadTodoList() as ArrayList<Task>
+        if (todoList.isEmpty())
+            mutableTodoList = repository.loadTodoList()
     }
 }

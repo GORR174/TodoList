@@ -3,7 +3,7 @@ package ru.catstack.todo.data
 import ru.catstack.todo.model.Task
 
 class TestTodoRepository : TodoRepository {
-    override fun loadTodoList(): List<Task> {
+    override fun loadTodoList(): ArrayList<Task> {
         return loadTestData()
     }
 
