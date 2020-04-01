@@ -4,6 +4,7 @@ import org.kodein.di.generic.instance
 import ru.catstack.todo.di.kodein
 import ru.catstack.todo.engine.BaseScreen
 import ru.catstack.todo.model.Command
+import java.lang.StringBuilder
 
 class TodoListScreen : BaseScreen() {
     private val viewModel: TodoListViewModel by kodein.instance()
@@ -12,6 +13,8 @@ class TodoListScreen : BaseScreen() {
 
     private val commands = arrayListOf(
         Command("help", "shows the help text", ::executeHelp),
+        Command("add", "add new question. Usage: 'add message'", ::executeAdd),
+        Command("print", "prints all tasks", ::printList),
         Command("exit", "close the application", ::executeExit)
     ).associateBy { it.name }
 
@@ -29,9 +32,9 @@ class TodoListScreen : BaseScreen() {
         }
     }
 
-    private fun printList() {
+    private fun printList(args: List<String>) {
         if (viewModel.todoList.isEmpty()) {
-            println("List is empty. Type 'add' to create new task")
+            println("List is empty. Type 'add message' to create new task")
         } else {
             viewModel.todoList.forEachIndexed { index, task ->
                 println("[${index + 1}] [${if (task.isCompleted) "V" else "X"}] - ${task.taskText}")
@@ -39,23 +42,47 @@ class TodoListScreen : BaseScreen() {
         }
     }
 
+    private fun printList() {
+        printList(listOf())
+    }
+
     private fun enterCommand() {
         print("\nEnter command:\n> ")
-        val command = readLine()?.toLowerCase() ?: "";
+        val input = readLine() ?: "";
+        val separatedInput = input.split(' ');
+
+        val command = separatedInput.first().toLowerCase()
+        val args = separatedInput.drop(1)
+
         if (commands.containsKey(command))
-            commands[command]?.function?.invoke()
+            commands[command]?.function?.invoke(args)
         else
             println("This command is not exists!")
     }
 
-    private fun executeHelp() {
+    private fun executeHelp(args: List<String>) {
         println()
         commands.values.forEach {
             println("${it.name} - ${it.helpText}")
         }
     }
 
-    private fun executeExit() {
+    private fun executeAdd(args: List<String>) {
+        if (args.isNotEmpty()) {
+            val textBuilder = StringBuilder()
+            args.forEach { textBuilder.append("$it ") }
+            textBuilder.deleteCharAt(textBuilder.lastIndex)
+            val text = textBuilder.toString()
+
+            viewModel.addTodo(text)
+
+            println("Added!")
+        } else {
+            println("You must add message to task. Example: 'add message'")
+        }
+    }
+
+    private fun executeExit(args: List<String>) {
         isRunning = false
     }
 }

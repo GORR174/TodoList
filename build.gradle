@@ -20,6 +20,9 @@ dependencies {
     // Kodein
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.5.4'
 
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     // junit
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

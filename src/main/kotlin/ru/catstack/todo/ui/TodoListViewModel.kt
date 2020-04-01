@@ -12,4 +12,9 @@ class TodoListViewModel(private val repository: TodoRepository) {
         if (todoList.isEmpty())
             mutableTodoList = repository.loadTodoList()
     }
+
+    fun addTodo(todoText: String) {
+        mutableTodoList.add(Task(todoText, false))
+        repository.saveTodoList(mutableTodoList)
+    }
 }
