@@ -3,16 +3,17 @@ package ru.catstack.todo.ui
 import org.kodein.di.generic.instance
 import ru.catstack.todo.di.kodein
 import ru.catstack.todo.engine.BaseScreen
+import ru.catstack.todo.model.Command
 
 class TodoListScreen : BaseScreen() {
     private val viewModel: TodoListViewModel by kodein.instance()
 
     private var isRunning = true
 
-    private val commands = hashMapOf<String, () -> Unit>(
-        "help" to ::executeHelp,
-        "exit" to ::executeExit
-    )
+    private val commands = arrayListOf(
+        Command("help", "shows help text", ::executeHelp),
+        Command("exit", "close the application", ::executeExit)
+    ).associateBy { it.name }
 
     override fun onCreate() {
         println("Todo List:\n")
@@ -42,7 +43,7 @@ class TodoListScreen : BaseScreen() {
         print("Enter command:\n> ")
         val command = readLine()?.toLowerCase() ?: "";
         if (commands.containsKey(command))
-            commands[command]?.invoke()
+            commands[command]?.function?.invoke()
         else
             println("This command is not exists!")
     }
