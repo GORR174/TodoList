@@ -3,7 +3,7 @@
   "tasks": [
     {
       "taskText": "Проверить новый функционал",
-      "isCompleted": false
+      "isCompleted": true
     }
   ]
 }
