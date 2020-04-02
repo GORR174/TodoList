@@ -13,7 +13,8 @@ class TodoListScreen : BaseScreen() {
 
     private val commands = arrayListOf(
         Command("help", "shows the help text", ::executeHelp),
-        Command("add", "add new question. Usage: 'add message'", ::executeAdd),
+        Command("add", "add new task. Usage: 'add message'", ::executeAdd),
+        Command("delete", "deletes task by number. Usage: 'delete 1'", ::executeDelete),
         Command("print", "prints all tasks", ::printList),
         Command("exit", "close the application", ::executeExit)
     ).associateBy { it.name }
@@ -74,11 +75,31 @@ class TodoListScreen : BaseScreen() {
             textBuilder.deleteCharAt(textBuilder.lastIndex)
             val text = textBuilder.toString()
 
-            viewModel.addTodo(text)
+            viewModel.addTask(text)
 
-            println("Added!")
+            println("Successful")
         } else {
             println("You must add message to task. Example: 'add message'")
+        }
+    }
+
+    private fun executeDelete(args: List<String>) {
+        if (args.isEmpty()) {
+            println("You must add task number. Example: 'delete 1'")
+            return
+        }
+
+        val taskNumber = args.first().toIntOrNull()
+        if (taskNumber == null) {
+            println("Incorrect number")
+            return
+        }
+
+        if (viewModel.todoList.size >= taskNumber && taskNumber >= 1) {
+            viewModel.deleteTask(taskNumber - 1)
+            println("Successful")
+        } else {
+            println("Task with number $taskNumber doesn't exists")
         }
     }
 

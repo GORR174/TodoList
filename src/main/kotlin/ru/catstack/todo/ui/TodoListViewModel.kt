@@ -13,8 +13,17 @@ class TodoListViewModel(private val repository: TodoRepository) {
             mutableTodoList = repository.loadTodoList()
     }
 
-    fun addTodo(todoText: String) {
+    fun addTask(todoText: String) {
         mutableTodoList.add(Task(todoText, false))
+        saveToRepository()
+    }
+
+    fun deleteTask(taskIndex: Int) {
+        mutableTodoList.removeAt(taskIndex)
+        saveToRepository()
+    }
+
+    private fun saveToRepository() {
         repository.saveTodoList(mutableTodoList)
     }
 }
