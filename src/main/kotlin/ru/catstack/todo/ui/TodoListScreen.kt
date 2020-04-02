@@ -5,7 +5,6 @@ import ru.catstack.todo.di.kodein
 import ru.catstack.todo.engine.BaseScreen
 import ru.catstack.todo.model.Command
 import ru.catstack.todo.ui.TodoListViewModel.ResponseState
-import java.lang.StringBuilder
 
 class TodoListScreen : BaseScreen() {
     private val viewModel: TodoListViewModel by kodein.instance()
@@ -18,6 +17,7 @@ class TodoListScreen : BaseScreen() {
         Command("delete", "deletes task by number. Usage: 'delete 1'", ::executeDelete),
         Command("complete", "switch complete value to selected task. Usage: 'complete 1'", ::executeComplete),
         Command("print", "prints all tasks", ::printList),
+        Command("filtered", "prints uncompleted tasks", ::printFilteredList),
         Command("exit", "close the application", ::executeExit)
     ).associateBy { it.name }
 
@@ -42,6 +42,26 @@ class TodoListScreen : BaseScreen() {
             viewModel.todoList.forEachIndexed { index, task ->
                 println("[${index + 1}] [${if (task.isCompleted) "V" else "X"}] - ${task.taskText}")
             }
+        }
+    }
+
+    private fun printFilteredList(args: List<String>) {
+        if (viewModel.todoList.isEmpty()) {
+            println("List is empty. Type 'add message' to create new task")
+            return
+        }
+
+        val completedTasks = viewModel.todoList
+            .associateBy { viewModel.todoList.indexOf(it) + 1 }
+            .filterValues { !it.isCompleted }
+
+        if (completedTasks.isEmpty()) {
+            println("Congratulations. You have completed all tasks")
+            return
+        }
+
+        completedTasks.forEach { (key, value) ->
+            println("[$key] [X] - ${value.taskText}")
         }
     }
 
