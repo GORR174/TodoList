@@ -3,6 +3,8 @@ package ru.catstack.todo.ui
 import ru.catstack.todo.data.TodoRepository
 import ru.catstack.todo.model.Task
 import java.lang.StringBuilder
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TodoListViewModel(private val repository: TodoRepository) {
     sealed class ResponseState {
@@ -78,6 +80,48 @@ class TodoListViewModel(private val repository: TodoRepository) {
         val task = mutableTodoList[taskIndex]
         task.isCompleted = !task.isCompleted
         saveToRepository()
+    }
+
+    fun moveUp(args: List<String>): ResponseState {
+        if (args.isEmpty())
+            return ResponseState.MissingArguments
+
+        val taskNumber = args.first().toIntOrNull() ?: return ResponseState.IncorrectNumber(args.first())
+
+        if (todoList.size >= taskNumber && taskNumber >= 1) {
+            moveUp(taskNumber - 1)
+            return ResponseState.Successful
+        } else {
+            return ResponseState.TaskIsNotExists(taskNumber - 1)
+        }
+    }
+
+    private fun moveUp(taskIndex: Int) {
+        if (taskIndex > 0) {
+            Collections.swap(mutableTodoList, taskIndex, taskIndex - 1)
+            saveToRepository()
+        }
+    }
+
+    fun moveDown(args: List<String>): ResponseState {
+        if (args.isEmpty())
+            return ResponseState.MissingArguments
+
+        val taskNumber = args.first().toIntOrNull() ?: return ResponseState.IncorrectNumber(args.first())
+
+        if (todoList.size >= taskNumber && taskNumber >= 1) {
+            moveDown(taskNumber - 1)
+            return ResponseState.Successful
+        } else {
+            return ResponseState.TaskIsNotExists(taskNumber - 1)
+        }
+    }
+
+    private fun moveDown(taskIndex: Int) {
+        if (taskIndex < todoList.lastIndex) {
+            Collections.swap(mutableTodoList, taskIndex, taskIndex + 1)
+            saveToRepository()
+        }
     }
 
     private fun saveToRepository() {

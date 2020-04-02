@@ -16,6 +16,8 @@ class TodoListScreen : BaseScreen() {
         Command("add", "add new task. Usage: 'add message'", ::executeAdd),
         Command("delete", "deletes task by number. Usage: 'delete 1'", ::executeDelete),
         Command("complete", "switch complete value to selected task. Usage: 'complete 1'", ::executeComplete),
+        Command("up", "Moves up the selected task. Usage: 'up 2'", ::executeMoveUp),
+        Command("down", "Moves down the selected task. Usage: 'down 1'", ::executeMoveDown),
         Command("print", "prints all tasks", ::printList),
         Command("filtered", "prints uncompleted tasks", ::printFilteredList),
         Command("exit", "close the application", ::executeExit)
@@ -121,6 +123,36 @@ class TodoListScreen : BaseScreen() {
                 println("Incorrect number")
             ResponseState.Successful ->
                 println("Successful")
+            is ResponseState.TaskIsNotExists ->
+                println("Task with number ${response.taskIndex + 1} doesn't exists")
+        }
+    }
+
+    private fun executeMoveUp(args: List<String>) {
+        when (val response = viewModel.moveUp(args)) {
+            ResponseState.MissingArguments ->
+                println("You must add task number. Example: 'up 2'")
+            is ResponseState.IncorrectNumber ->
+                println("Incorrect number")
+            ResponseState.Successful -> {
+                println("Successful")
+                printList()
+            }
+            is ResponseState.TaskIsNotExists ->
+                println("Task with number ${response.taskIndex + 1} doesn't exists")
+        }
+    }
+
+    private fun executeMoveDown(args: List<String>) {
+        when (val response = viewModel.moveDown(args)) {
+            ResponseState.MissingArguments ->
+                println("You must add task number. Example: 'down 1'")
+            is ResponseState.IncorrectNumber ->
+                println("Incorrect number")
+            ResponseState.Successful -> {
+                println("Successful")
+                printList()
+            }
             is ResponseState.TaskIsNotExists ->
                 println("Task with number ${response.taskIndex + 1} doesn't exists")
         }
