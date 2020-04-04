@@ -62,6 +62,13 @@ class TodoListViewModel(private val repository: TodoRepository) {
         saveToRepository()
     }
 
+    fun deleteAllTasks(): ResponseState {
+        mutableTodoList = arrayListOf()
+        saveToRepository()
+
+        return ResponseState.Successful
+    }
+
     fun completeTask(args: List<String>): ResponseState {
         if (args.isEmpty())
             return ResponseState.MissingArguments

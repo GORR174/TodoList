@@ -15,6 +15,7 @@ class TodoListScreen : BaseScreen() {
         Command("help", "shows the help text", ::executeHelp),
         Command("add", "add new task. Usage: 'add message'", ::executeAdd),
         Command("delete", "deletes task by number. Usage: 'delete 1'", ::executeDelete),
+        Command("delete-all", "deletes all tasks", ::executeDeleteAll),
         Command("complete", "switch complete value to selected task. Usage: 'complete 1'", ::executeComplete),
         Command("up", "Moves up the selected task. Usage: 'up 2'", ::executeMoveUp),
         Command("down", "Moves down the selected task. Usage: 'down 1'", ::executeMoveDown),
@@ -112,6 +113,14 @@ class TodoListScreen : BaseScreen() {
                 println("Successful")
             is ResponseState.TaskIsNotExists ->
                 println("Task with number ${response.taskIndex + 1} doesn't exists")
+        }
+    }
+
+    private fun executeDeleteAll(args: List<String>) {
+        when (viewModel.deleteAllTasks()) {
+            ResponseState.Successful ->
+                println("Successful")
+            else -> println("Unexpected error")
         }
     }
 
