@@ -6,9 +6,9 @@ import ru.catstack.todo.model.TodoResponse
 import java.io.File
 import java.lang.Exception
 
-class JsonTodoRepository(private val gson: Gson) : TodoRepository {
+class JsonTodoRepository(private val gson: Gson, private val filePath: String = "todo-list.json") : TodoRepository {
     override fun loadTodoList(): ArrayList<Task> {
-        val file = File("todo-list.json")
+        val file = File(filePath)
         if (!file.exists())
             return ArrayList()
 
@@ -23,7 +23,7 @@ class JsonTodoRepository(private val gson: Gson) : TodoRepository {
     override fun saveTodoList(todoList: ArrayList<Task>) {
         val response = TodoResponse(todoList.size, todoList)
 
-        val file = File("todo-list.json")
+        val file = File(filePath)
         if (!file.exists())
             file.createNewFile()
 
