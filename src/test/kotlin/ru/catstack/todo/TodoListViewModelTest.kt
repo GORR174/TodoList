@@ -44,10 +44,7 @@ class TodoListViewModelTest {
 
         Assert.assertEquals(ResponseState.MissingArguments, viewModel.completeTask(arrayListOf()))
 
-        Assert.assertEquals(ResponseState.IncorrectNumber("a"), viewModel.completeTask(arrayListOf("a")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1.3"), viewModel.completeTask(arrayListOf("1.3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1,3"), viewModel.completeTask(arrayListOf("1,3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("13d"), viewModel.completeTask(arrayListOf("13d")))
+        testIncorrectNumbers(viewModel::completeTask)
 
         Assert.assertEquals(ResponseState.TaskIsNotExists(-1), viewModel.completeTask(arrayListOf("0")))
         Assert.assertEquals(ResponseState.TaskIsNotExists(3), viewModel.completeTask(arrayListOf("4")))
@@ -75,10 +72,7 @@ class TodoListViewModelTest {
 
         Assert.assertEquals(ResponseState.MissingArguments, viewModel.deleteTask(arrayListOf()))
 
-        Assert.assertEquals(ResponseState.IncorrectNumber("a"), viewModel.deleteTask(arrayListOf("a")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1.3"), viewModel.deleteTask(arrayListOf("1.3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1,3"), viewModel.deleteTask(arrayListOf("1,3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("13d"), viewModel.deleteTask(arrayListOf("13d")))
+        testIncorrectNumbers(viewModel::completeTask)
 
         Assert.assertEquals(ResponseState.TaskIsNotExists(-1), viewModel.deleteTask(arrayListOf("0")))
         Assert.assertEquals(ResponseState.TaskIsNotExists(3), viewModel.deleteTask(arrayListOf("4")))
@@ -118,10 +112,7 @@ class TodoListViewModelTest {
 
         Assert.assertEquals(ResponseState.MissingArguments, viewModel.moveUp(arrayListOf()))
 
-        Assert.assertEquals(ResponseState.IncorrectNumber("a"), viewModel.moveUp(arrayListOf("a")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1.3"), viewModel.moveUp(arrayListOf("1.3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1,3"), viewModel.moveUp(arrayListOf("1,3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("13d"), viewModel.moveUp(arrayListOf("13d")))
+        testIncorrectNumbers(viewModel::completeTask)
 
         Assert.assertEquals(ResponseState.TaskIsNotExists(-1), viewModel.moveUp(arrayListOf("0")))
         Assert.assertEquals(ResponseState.TaskIsNotExists(3), viewModel.moveUp(arrayListOf("4")))
@@ -160,10 +151,7 @@ class TodoListViewModelTest {
 
         Assert.assertEquals(ResponseState.MissingArguments, viewModel.moveDown(arrayListOf()))
 
-        Assert.assertEquals(ResponseState.IncorrectNumber("a"), viewModel.moveDown(arrayListOf("a")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1.3"), viewModel.moveDown(arrayListOf("1.3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("1,3"), viewModel.moveDown(arrayListOf("1,3")))
-        Assert.assertEquals(ResponseState.IncorrectNumber("13d"), viewModel.moveDown(arrayListOf("13d")))
+        testIncorrectNumbers(viewModel::completeTask)
 
         Assert.assertEquals(ResponseState.TaskIsNotExists(-1), viewModel.moveDown(arrayListOf("0")))
         Assert.assertEquals(ResponseState.TaskIsNotExists(3), viewModel.moveDown(arrayListOf("4")))
@@ -189,5 +177,12 @@ class TodoListViewModelTest {
             ),
             viewModel.todoList
         )
+    }
+
+    private fun testIncorrectNumbers(action: (ArrayList<String>) -> ResponseState) {
+        Assert.assertEquals(ResponseState.IncorrectNumber("a"), action(arrayListOf("a")))
+        Assert.assertEquals(ResponseState.IncorrectNumber("1.3"), action(arrayListOf("1.3")))
+        Assert.assertEquals(ResponseState.IncorrectNumber("1,3"), action(arrayListOf("1,3")))
+        Assert.assertEquals(ResponseState.IncorrectNumber("13d"), action(arrayListOf("13d")))
     }
 }
